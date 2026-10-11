@@ -1,0 +1,310 @@
+Alcohol website 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiquorDrop | Alcohol Delivery in TS & AP</title>
+    <style>
+        :root {
+            --primary-color: #fc8019; /* Swiggy Orange */
+            --dark-color: #282c3f;
+            --text-muted: #686b78;
+            --light-bg: #f4f4f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'ProximaNova', arial, sans-serif;
+        }
+
+        body {
+            color: var(--dark-color);
+            background-color: #fff;
+        }
+
+        /* Age Gate Modal */
+        .age-gate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(40, 44, 63, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .age-gate-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 450px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .age-gate h2 { color: var(--primary-color); margin-bottom: 15px; }
+        .age-gate p { margin-bottom: 25px; color: var(--text-muted); }
+        .age-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* Header Layout */
+        header {
+            box-shadow: 0 15px 40px -20px rgba(40,44,63,.15);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: white;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 80px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .region-select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-weight: 600;
+            outline: none;
+        }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            font-weight: 600;
+        }
+        .nav-menu li { cursor: pointer; }
+        .nav-menu li:hover { color: var(--primary-color); }
+
+        /* Main App Body */
+        main {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+
+        /* Products Grid */
+        .products-section h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            border: 1px solid transparent;
+            padding: 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .card:hover {
+            box-shadow: 0 4px 14px #e9e9eb;
+            border-color: #e9e9eb;
+        }
+        .item-img {
+            width: 100%;
+            height: 180px;
+            background-color: var(--light-bg);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #a0a0a0;
+        }
+        .item-name { font-weight: 600; font-size: 17px; margin-bottom: 4px;}
+        .item-meta { color: var(--text-muted); font-size: 13px; margin-bottom: 12px;}
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price { font-weight: 600; }
+        .add-btn {
+            border: 1px solid #e2e2e7;
+            background: white;
+            color: #60b246;
+            font-weight: 700;
+            padding: 6px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .add-btn:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            background: white;
+            border: 1px solid #e9e9eb;
+            padding: 20px;
+            align-self: start;
+            position: sticky;
+            top: 120px;
+        }
+        .cart-sidebar h3 { margin-bottom: 15px; font-size: 20px;}
+        .cart-items {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e9e9eb;
+            font-size: 14px;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .checkout-btn {
+            width: 100%;
+            background: #60b246;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Age Verification Screen -->
+    <div class="age-gate" id="ageGate">
+        <div class="age-gate-box">
+            <h2>Age Verification Required</h2>
+            <p>You must be of legal drinking age in your respective state (21+ in TS / AP) to view and order from this website.</p>
+            <button class="age-btn" onclick="verifyAge()">I am 21 or Older</button>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <div class="logo-area">
+                <a href="#" class="logo">LiquorDrop</a>
+                <select class="region-select" id="region" onchange="updateStateBanner()">
+                    <option value="Telangana">Hyderabad, Telangana</option>
+                    <option value="Andhra Pradesh">Vijayawada, Andhra Pradesh</option>
+                </select>
+            </div>
+            <ul class="nav-menu">
+                <li>Search</li>
+                <li>Offers</li>
+                <li>Help</li>
+                <li>Sign In</li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Product Section -->
+        <section class="products-section">
+            <h2 id="sectionTitle">Premium Collection - Telangana</h2>
+            <div class="grid">
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="item-img">Whiskey Bottle</div>
+                    <div class="item-name">Signature Premium</div>
+                    <div class="item-meta">Blended Whisky • 750ml</div>
+                    <div class="card-footer">
+                        <span class="price">₹1420</span>
+                        <button class="add-btn" onclick="addToCart('Signature Premium', 1420)">ADD</button>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="item-img">Beer Can</div>
+                    <div class="item-name">Kingfisher Premium</div>
+                    <div class="item-meta">Strong Beer • 500ml</div>
+                    <div class="card-footer">
+                        <span class="price">₹180</span>
+                        <button class="add-btn" onclick="addToCart('Kingfisher Premium', 180)">ADD</button>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="item-img">Wine Bottle</div>
+                    <div class="item-name">Sula Shiraz</div>
+                    <div class="item-meta">Red Wine • 750ml</div>
+                    <div class="card-footer">
+                        <span class="price">₹850</span>
+                        <button class="add-btn" onclick="addToCart('Sula Shiraz', 850)">ADD</button>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="card">
+                    <div class="item-img">Vodka Bottle</div>
+                    <div class="item-name">Magic Moments</div>
+                    <div class="item-meta">Grain Vodka • 750ml</div>
+                    <div class="card-footer">
+                        <span class="price">₹980</span>
+                        <button class="add-btn" onclick="addToCart('Magic Moments', 980)">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Checkout Sidebar -->
+        <aside class="cart-sidebar">
+            <h3>Your Cart</h3>
+            <ul class="cart-items" id="cartItems">
+                <!-- Dynamic Items will render here -->
+            </ul>
+            <div class="cart-total">
+                <span>To Pay</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">PROCEED TO CHECKOUT</button>
+        </aside>
+    </main>
+
+    <!-- App Logic Script -->
+    <script>
+        let cart = [];
+        let total = 0;
+
+        function verifyAge() {
+            document.getElementById('ageGate').style.display = 'none';
+        }
+
+        function updateStateBanner() {
+
+
